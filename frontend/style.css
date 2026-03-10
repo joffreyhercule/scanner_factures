@@ -1,10 +1,14 @@
-:root {
-    --pico-primary: #d4a017;
-    --pico-primary-hover: #b8860b;
-    --pico-primary-focus: rgba(212, 160, 23, 0.2);
-    --pico-primary-inverse: #fff;
-    --pico-primary-background: #d4a017;
-    --pico-primary-hover-background: #b8860b;
+:root,
+:root:not([data-theme]),
+[data-theme="dark"],
+[data-theme="light"] {
+    --pico-primary: #d4a017 !important;
+    --pico-primary-hover: #b8860b !important;
+    --pico-primary-focus: rgba(212, 160, 23, 0.2) !important;
+    --pico-primary-inverse: #fff !important;
+    --pico-primary-background: #d4a017 !important;
+    --pico-primary-hover-background: #b8860b !important;
+    --pico-primary-underline: rgba(212, 160, 23, 0.5) !important;
 }
 
 .upload-zone {
@@ -127,4 +131,20 @@
     max-width: 900px;
     max-height: 90vh;
     overflow-y: auto;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-row h1 {
+    margin-bottom: 0;
+}
+
+#theme-toggle {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
 }

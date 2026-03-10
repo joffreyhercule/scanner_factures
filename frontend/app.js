@@ -1,5 +1,23 @@
 const API = "";
 
+// --- Theme toggle ---
+const themeToggle = document.getElementById("theme-toggle");
+const htmlEl = document.documentElement;
+
+function applyTheme(theme) {
+    htmlEl.setAttribute("data-theme", theme);
+    themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
+    localStorage.setItem("theme", theme);
+}
+
+// Init from localStorage or default dark
+applyTheme(localStorage.getItem("theme") || "dark");
+
+themeToggle.addEventListener("click", () => {
+    const current = htmlEl.getAttribute("data-theme");
+    applyTheme(current === "dark" ? "light" : "dark");
+});
+
 // --- Cache pour résolution noms ---
 let clientsCache = {};
 let vehiculesCache = {};
