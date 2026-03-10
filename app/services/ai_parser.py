@@ -1,9 +1,13 @@
 import json
+import logging
 import base64
+import time
 import io
 import fitz  # PyMuPDF
 import ollama
 from app.config import OLLAMA_MODEL
+
+logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT = """Tu es un assistant spécialisé dans l'extraction de données de factures de garage automobile (réparation de véhicules).
 
@@ -54,12 +58,16 @@ Règles :
 
 def pdf_to_images(pdf_bytes: bytes) -> list[bytes]:
     """Convertit chaque page du PDF en image PNG."""
+    logger.info("Conversion PDF -> images (%d octets)", len(pdf_bytes))
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
     images = []
-    for page in doc:
+    for i, page in enumerate(doc):
         pix = page.get_pixmap(dpi=200)
-        images.append(pix.tobytes("png"))
+        img_bytes = pix.tobytes("png")
+        logger.info("  Page %d : %d x %d px, %d octets PNG", i + 1, pix.width, pix.height, len(img_bytes))
+        images.append(img_bytes)
     doc.close()
+    logger.info("Conversion terminée : %d page(s)", len(images))
     return images
 
 
@@ -69,17 +77,42 @@ def parse_invoice_pdf(pdf_bytes: bytes) -> tuple[dict, list[bytes]]:
     images = pdf_to_images(pdf_bytes)
     images_b64 = [base64.b64encode(img).decode("utf-8") for img in images]
 
-    response = ollama.chat(
-        model=OLLAMA_MODEL,
-        messages=[
-            {
-                "role": "user",
-                "content": SYSTEM_PROMPT + "\n\nAnalyse cette facture et extrais les données.",
-                "images": images_b64,
-            }
-        ],
-        format="json",
-    )
+    logger.info("Appel Ollama - modèle: %s, %d image(s), taille totale b64: %d",
+                OLLAMA_MODEL, len(images_b64), sum(len(b) for b in images_b64))
 
+    start = time.time()
+    try:
+        response = ollama.chat(
+            model=OLLAMA_MODEL,
+            messages=[
+                {
+                    "role": "user",
+                    "content": SYSTEM_PROMPT + "\n\nAnalyse cette facture et extrais les données.",
+                    "images": images_b64,
+                }
+            ],
+            format="json",
+        )
+    except Exception as e:
+        logger.error("Erreur appel Ollama après %.1fs : %s", time.time() - start, e)
+        raise
+
+    elapsed = time.time() - start
     content = response.message.content
-    return json.loads(content), images
+
+    logger.info("Réponse Ollama en %.1fs (%d caractères)", elapsed, len(content))
+    logger.debug("Réponse brute Ollama :\n%s", content)
+
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError as e:
+        logger.error("Erreur parsing JSON de la réponse Ollama : %s", e)
+        logger.error("Contenu reçu :\n%s", content)
+        raise
+
+    logger.info("Données extraites - client: %s, véhicule: %s, facture n°%s",
+                data.get("client", {}).get("nom", "?"),
+                data.get("vehicule", {}).get("immatriculation", "?"),
+                data.get("facture", {}).get("numero_facture", "?"))
+
+    return data, images
