@@ -1,0 +1,130 @@
+:root {
+    --pico-primary: #d4a017;
+    --pico-primary-hover: #b8860b;
+    --pico-primary-focus: rgba(212, 160, 23, 0.2);
+    --pico-primary-inverse: #fff;
+    --pico-primary-background: #d4a017;
+    --pico-primary-hover-background: #b8860b;
+}
+
+.upload-zone {
+    border: 2px dashed var(--pico-muted-border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s;
+}
+
+.upload-zone.dragover {
+    border-color: var(--pico-primary);
+    background: var(--pico-primary-focus);
+}
+
+#file-list {
+    margin: 1rem 0;
+}
+
+#file-list .file-item {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    margin: 0.25rem;
+    background: var(--pico-muted-border-color);
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-link {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.tab-link.active {
+    font-weight: bold;
+    border-bottom: 2px solid var(--pico-primary);
+}
+
+.card {
+    text-align: center;
+    padding: 1rem;
+    border: 1px solid var(--pico-muted-border-color);
+    border-radius: 8px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--pico-primary);
+    margin: 0;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+#upload-results {
+    margin-bottom: 1rem;
+}
+
+.result-success {
+    color: green;
+}
+
+.result-error {
+    color: red;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    color: var(--pico-del-color);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.btn-edit {
+    background: none;
+    border: none;
+    color: var(--pico-primary);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.btn-detail {
+    background: none;
+    border: none;
+    color: var(--pico-primary);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.facture-images {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--pico-muted-border-color);
+    padding-top: 1rem;
+}
+
+.facture-page-img {
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid var(--pico-muted-border-color);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+#facture-modal article {
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+}

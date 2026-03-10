@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner Factures Garage</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="container">
+        <h1>Scanner Factures Garage</h1>
+
+        <!-- Zone upload -->
+        <div id="upload-zone" class="upload-zone">
+            <p>Glissez vos fichiers PDF ici ou cliquez pour sélectionner</p>
+            <input type="file" id="file-input" accept=".pdf" multiple hidden>
+            <button id="btn-select" class="outline">Sélectionner des fichiers</button>
+            <div id="file-list"></div>
+            <button id="btn-upload" class="primary" hidden>Traiter les factures</button>
+        </div>
+        <div id="upload-progress" hidden>
+            <progress id="progress-bar"></progress>
+            <p id="progress-text">Traitement en cours...</p>
+        </div>
+        <div id="upload-results" hidden></div>
+    </header>
+
+    <main class="container">
+        <!-- Onglets -->
+        <nav>
+            <ul>
+                <li><a href="#" class="tab-link active" data-tab="factures">Factures</a></li>
+                <li><a href="#" class="tab-link" data-tab="clients">Clients</a></li>
+                <li><a href="#" class="tab-link" data-tab="vehicules">Véhicules</a></li>
+            </ul>
+        </nav>
+
+        <!-- Tab Factures -->
+        <div id="tab-factures" class="tab-content active">
+            <div class="grid" id="stats-cards">
+                <div class="card">
+                    <h4>CA HT</h4>
+                    <p id="stat-ht" class="stat-value">0,00 €</p>
+                </div>
+                <div class="card">
+                    <h4>TVA à déclarer</h4>
+                    <p id="stat-tva" class="stat-value">0,00 €</p>
+                </div>
+                <div class="card">
+                    <h4>Nb factures</h4>
+                    <p id="stat-nb" class="stat-value">0</p>
+                </div>
+            </div>
+            <div class="table-container">
+                <table role="grid">
+                    <thead>
+                        <tr>
+                            <th>Numéro</th>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th>Véhicule</th>
+                            <th>Total HT</th>
+                            <th>TVA</th>
+                            <th>Total TTC</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="factures-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Clients -->
+        <div id="tab-clients" class="tab-content">
+            <div class="table-container">
+                <table role="grid">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Adresse</th>
+                            <th>Téléphone</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clients-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Véhicules -->
+        <div id="tab-vehicules" class="tab-content">
+            <div class="table-container">
+                <table role="grid">
+                    <thead>
+                        <tr>
+                            <th>Immatriculation</th>
+                            <th>Marque</th>
+                            <th>Modèle</th>
+                            <th>Client</th>
+                            <th>Année</th>
+                            <th>Km</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehicules-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal détail facture -->
+    <dialog id="facture-modal">
+        <article>
+            <header>
+                <button aria-label="Fermer" rel="prev" class="close-modal"></button>
+                <h3 id="modal-title">Détail facture</h3>
+            </header>
+            <div id="modal-body"></div>
+        </article>
+    </dialog>
+
+    <!-- Modal édition -->
+    <dialog id="edit-modal">
+        <article>
+            <header>
+                <button aria-label="Fermer" rel="prev" class="close-edit-modal"></button>
+                <h3 id="edit-modal-title">Modifier</h3>
+            </header>
+            <form id="edit-form"></form>
+            <footer>
+                <button class="secondary close-edit-modal-btn">Annuler</button>
+                <button class="primary" id="edit-save-btn">Enregistrer</button>
+            </footer>
+        </article>
+    </dialog>
+
+    <script src="/app.js"></script>
+</body>
+</html>
